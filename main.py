@@ -3,6 +3,8 @@ from app import WebActions
 import schedule
 import time
 import sys
+import json
+from multiprocessing import Process
 
 
 def testing_web(url: str):
@@ -15,12 +17,26 @@ def testing_web(url: str):
         )
 
 
+def distribute_jobs(json_path: str):
+
+    processes = []
+    with open(json_path, 'r') as json_file:
+        data = json.load(json_file)
+
+    for url in data.get("sites"):
+        process = Process(target=testing_web, args=(url,))
+        processes.append(process)
+        process.start()
+
+    [proc.join() for proc in processes]
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 main.py url")
+        print("Usage: python3 main.py configFile.json")
         exit(-1)
 
-    schedule.every(5).minutes.do(testing_web, (sys.argv[1]))
+    schedule.every(5).seconds.do(distribute_jobs, (sys.argv[1]))
     while 1:
         schedule.run_pending()
         time.sleep(1)
