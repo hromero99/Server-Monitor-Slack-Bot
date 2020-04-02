@@ -2,3 +2,4 @@
 
 A simple slack bot created for demostration in Sistemas de la Informacion (SIF) course.
 
+[*] Added Integration with Slack
