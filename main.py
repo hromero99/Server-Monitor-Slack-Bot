@@ -1,11 +1,10 @@
 from app import slack_client
 from app import WebActions
-import schedule
 import time
 import sys
 import json
 from multiprocessing import Process
-
+from app import app
 
 def testing_web(url: str):
     print(f"[?] Testing {url}")
@@ -35,8 +34,4 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python3 main.py configFile.json")
         exit(-1)
-
-    schedule.every(5).seconds.do(distribute_jobs, (sys.argv[1]))
-    while 1:
-        schedule.run_pending()
-        time.sleep(1)
+    app.run()
