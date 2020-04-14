@@ -34,4 +34,4 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python3 main.py configFile.json")
         exit(-1)
-    app.run()
+    app.run(host='0.0.0.0')
