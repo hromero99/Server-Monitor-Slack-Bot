@@ -31,12 +31,6 @@ def server_monitor():
 @app.route("/check-server", methods=["POST"])
 def check_server():
     command = request.data.get('text').split(" ")
-    if not 'http://' in command[-1] or not 'https://' in command[-1]:
-        response = jsonify({
-            'text': f'The url {command[-1]} is not correct ',
-        })
-        response.status_code = 200
-        return response
     response = jsonify({
         'text': WebActions(url=command[-1]).check_website_status()
     })
