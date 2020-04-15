@@ -15,7 +15,7 @@ if not os.environ.get("DATABASE_FILE"):
 
 slack_client = WebClient(os.environ.get("SLACK_BOT_TOKEN"))
 app = FlaskAPI(__name__, instance_relative_config=False)
-
+database = Database(os.environ.get("DATABASE_FILE"))
 
 @app.route("/server-monitor", methods=["POST"])
 def server_monitor():
@@ -34,11 +34,23 @@ def server_monitor():
 @app.route("/check-server", methods=["POST"])
 def check_server():
     command = request.data.get('text').split(" ")
+
     if command[0] == 'add':
-	Database()
-    response = jsonify({
-    #    'text': WebActions(url=command[-1]).check_website_status()
-	 'text': '%'.join(command)
-    })
+        database.add_new_server(server_url=command[-1])
+        response = jsonify({
+            'text': f'Url {command[-1]} agregada correctamente'
+        })
+    elif command[0] == 'check':
+        checker = WebActions()
+        for server in database.get_urls():
+            f'{server} -->  {checker.check_website_status(url=command[-1])}'
+        response = jsonify({
+            'text': WebActions().check_website_status(url=command[-1])
+        })
+    else:
+
+        response = jsonify({
+            'text': f'Error al ejecutar el comando {command[0]}'
+        })
     response.status_code = 200
     return response
