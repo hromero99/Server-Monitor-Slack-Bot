@@ -6,7 +6,7 @@ class Database(object):
 	def __init__(self, json_path: str):
 		self.database_path = json_path
 		with open(json_path, 'r') as disk:
-			self.data = json.loads(disk)
+			self.data = json.load(disk)
 
 	def save(self):
 		with open(self.database_path, 'w') as diskfile:
