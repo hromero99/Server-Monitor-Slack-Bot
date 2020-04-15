@@ -42,13 +42,15 @@ def check_server():
         })
     elif command[0] == 'check':
         checker = WebActions()
+        status = []
         for server in database.get_urls():
-            f'{server} -->  {checker.check_website_status(url=command[-1])}'
+            status.append(
+                f'{server} -->  {checker.check_website_status(url=server)}'
+            )
         response = jsonify({
-            'text': WebActions().check_website_status(url=command[-1])
+            'text': '\n'.join(status)
         })
     else:
-
         response = jsonify({
             'text': f'Error al ejecutar el comando {command[0]}'
         })
