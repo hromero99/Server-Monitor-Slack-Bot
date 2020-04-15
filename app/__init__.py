@@ -36,10 +36,21 @@ def check_server():
     command = request.data.get('text').split(" ")
 
     if command[0] == 'add':
-        database.add_new_server(server_url=command[-1])
-        response = jsonify({
-            'text': f'Url {command[-1]} agregada correctamente'
-        })
+        if 'http://' in command[-1]:
+            database.add_new_server(server_url=command[-1])
+            response = jsonify({
+                'text': f'Url {command[-1]} agregada correctamente'
+            })
+        elif 'https://' in command[-1]:
+            database.add_new_server(server_url=command[-1])
+            response = jsonify({
+                'text': f'Url {command[-1]} agregada correctamente'
+            })
+        else:
+            response = jsonify({
+                'text': f'Url {command[-1]} incorrecta'
+            })
+
     elif command[0] == 'check':
         checker = WebActions()
         status = []
